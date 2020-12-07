@@ -46,11 +46,9 @@
   _update = nil;
 }
 
-// NOTE: Despite the documentation, this is not always called if an exception is caught.
-- (void)recordFailureWithDescription:(NSString *)description inFile:(NSString *)filePath atLine:(NSUInteger)lineNumber expected:(BOOL)expected
-{
+- (void)recordIssue:(XCTIssue *)issue {
   _failed = YES;
-  [super recordFailureWithDescription:description inFile:filePath atLine:lineNumber expected:expected];
+  [super recordIssue:issue];
 }
 
 #pragma mark Test Methods

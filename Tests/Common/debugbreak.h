@@ -55,7 +55,7 @@ enum {
 
 #if defined(__i386__) || defined(__x86_64__)
 enum { HAVE_TRAP_INSTRUCTION = 1, };
-__attribute__((gnu_inline, always_inline))
+__attribute__((always_inline))
 __inline__ static void trap_instruction(void)
 {
 	__asm__ volatile("int $0x03");
@@ -112,7 +112,7 @@ __inline__ static void trap_instruction(void)
 enum { HAVE_TRAP_INSTRUCTION = 0, };
 #endif
 
-__attribute__((gnu_inline, always_inline))
+__attribute__((always_inline))
 __inline__ static void debug_break(void)
 {
 	if (HAVE_TRAP_INSTRUCTION) {

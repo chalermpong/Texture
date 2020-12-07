@@ -67,6 +67,8 @@ ASDK_EXTERN ASLayout *ASCalculateLayout(id<ASLayoutElement>layoutElement, const 
  */
 @property (nonatomic, copy, readonly) NSArray<ASLayout *> *sublayouts;
 
+@property (nonatomic) int count1;
+
 /**
  * The frame for the given element, or CGRectNull if 
  * the element is not a direct descendent of this layout.

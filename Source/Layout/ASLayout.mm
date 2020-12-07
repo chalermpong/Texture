@@ -22,6 +22,7 @@
 NSString *const ASThreadDictMaxConstraintSizeKey = @"kASThreadDictMaxConstraintSizeKey";
 
 CGPoint const ASPointNull = {NAN, NAN};
+int count1 = 0;
 
 BOOL ASPointIsNull(CGPoint point)
 {
@@ -59,6 +60,7 @@ ASDISPLAYNODE_INLINE AS_WARN_UNUSED_RESULT BOOL ASLayoutIsDisplayNodeType(ASLayo
 
 @dynamic frame, type;
 
+
 static std::atomic_bool static_retainsSublayoutLayoutElements = ATOMIC_VAR_INIT(NO);
 
 + (void)setShouldRetainSublayoutLayoutElements:(BOOL)shouldRetain
@@ -71,6 +73,8 @@ static std::atomic_bool static_retainsSublayoutLayoutElements = ATOMIC_VAR_INIT(
   return static_retainsSublayoutLayoutElements.load();
 }
 
+static NSDictionary* objPool = nil;
+
 - (instancetype)initWithLayoutElement:(id<ASLayoutElement>)layoutElement
                                  size:(CGSize)size
                              position:(CGPoint)position
@@ -79,6 +83,18 @@ static std::atomic_bool static_retainsSublayoutLayoutElements = ATOMIC_VAR_INIT(
   NSParameterAssert(layoutElement);
   
   self = [super init];
+  
+  static int count;
+  static dispatch_once_t onceToken;
+      dispatch_once(&onceToken, ^{
+        objPool = @{};
+        count = 0;
+      });
+  [objPool setValue:self forKey: [NSString stringWithFormat:@"%d", count]];
+  self.count1 = count;
+  count++;
+  NSLog(@"ASLayout init @d -> %@" , self.count1, self);
+  
   if (self) {
 #if ASDISPLAYNODE_ASSERTIONS_ENABLED
     for (ASLayout *sublayout in sublayouts) {
@@ -148,6 +164,8 @@ static std::atomic_bool static_retainsSublayoutLayoutElements = ATOMIC_VAR_INIT(
 
 - (void)dealloc
 {
+  [objPool setValue:nil forKey:[NSString stringWithFormat:@"%d", self.count1]];
+  NSLog(@"ASLayout dealloc %@" , objPool);
   if (_retainSublayoutElements.load()) {
     for (ASLayout *sublayout in _sublayouts) {
       // We retained this, so there's no risk of it deallocating on us.

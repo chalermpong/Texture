@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:examples/TestApp/TestApp.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:AsyncDisplayKit.xcodeproj">
    </FileRef>
    <FileRef
